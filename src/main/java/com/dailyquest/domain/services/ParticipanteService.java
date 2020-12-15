@@ -104,7 +104,7 @@ public class ParticipanteService {
 
         usuario = usuarioService.findById(usuario.getId());
 
-        var p = participanteRepository.save(
+        Participante p = participanteRepository.save(
                 new Participante(
                         new ParticipantePK(grupo, usuario),
                         TipoPermissao.PARTICIPANTE

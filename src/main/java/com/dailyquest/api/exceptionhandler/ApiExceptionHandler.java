@@ -37,22 +37,20 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler(AuthorizationException.class)
     public ResponseEntity<Object> authorizationExceptionHandler(AuthorizationException ex, WebRequest request){
-        var status = HttpStatus.FORBIDDEN;
-        errorResponse.setStatus(status.value());
+        errorResponse.setStatus(HttpStatus.FORBIDDEN.value());
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setMoment(OffsetDateTime.now());
 
-        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
     @ExceptionHandler(FileException.class)
     public ResponseEntity<Object> FileExceptionHandler(FileException ex, WebRequest request){
-        var status = HttpStatus.BAD_REQUEST;
-        errorResponse.setStatus(status.value());
+        errorResponse.setStatus( HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setMoment(OffsetDateTime.now());
 
-        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(AmazonServiceException.class)
@@ -68,52 +66,47 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
     @ExceptionHandler(AmazonClientException.class)
     public ResponseEntity<Object> AmazonClientExceptionHandler(AmazonClientException ex, WebRequest request){
-        var status = HttpStatus.BAD_REQUEST;
-        errorResponse.setStatus(status.value());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setMoment(OffsetDateTime.now());
 
-        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(AmazonS3Exception.class)
     public ResponseEntity<Object> AmazonS3ExceptionHandler(AmazonS3Exception ex, WebRequest request){
-        var status = HttpStatus.BAD_REQUEST;
-        errorResponse.setStatus(status.value());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setMoment(OffsetDateTime.now());
 
-        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(DomainException.class)
     public ResponseEntity<Object> domainExceptionHandler(DomainException ex, WebRequest request){
-        var status = HttpStatus.BAD_REQUEST;
-        errorResponse.setStatus(status.value());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setMoment(OffsetDateTime.now());
 
-        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(DataIntegrityException.class)
     public ResponseEntity<Object> dataIntegrityExceptionHandler(DataIntegrityException ex, WebRequest request){
-        var status = HttpStatus.BAD_REQUEST;
-        errorResponse.setStatus(status.value());
+        errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setMoment(OffsetDateTime.now());
 
-        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<Object> ObjectNotFoundExceptionHandler(ObjectNotFoundException ex, WebRequest request){
-        var status = HttpStatus.NOT_FOUND;
-        errorResponse.setStatus(status.value());
+        errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
         errorResponse.setMessage(ex.getMessage());
         errorResponse.setMoment(OffsetDateTime.now());
 
-        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), status, request);
+        return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
  
     @Override
