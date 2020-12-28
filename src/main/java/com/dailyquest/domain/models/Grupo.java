@@ -22,7 +22,6 @@ public class Grupo extends EntidadeDominio{
     private static final long serialVersionUID = 1L;
 
     private String descricao;
-    private String imagemUrl;
 
     @OneToMany(mappedBy = "participante.grupo", cascade = CascadeType.ALL)
     private Set<Participante> participantes;

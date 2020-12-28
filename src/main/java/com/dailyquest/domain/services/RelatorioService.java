@@ -2,17 +2,14 @@ package com.dailyquest.domain.services;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.dailyquest.api.config.security.auth.LoginService;
 import com.dailyquest.domain.models.Participante;
 import com.dailyquest.domain.models.Periodo;
 import com.dailyquest.domain.models.Relatorio;
-import com.dailyquest.domain.models.Usuario;
 import com.dailyquest.domain.models.enums.StatusPeriodo;
 import com.dailyquest.domain.repositories.RelatorioRepository;
-import com.dailyquest.domain.services.exceptions.AuthorizationException;
 import com.dailyquest.domain.services.exceptions.DomainException;
 import com.dailyquest.domain.services.exceptions.ObjectNotFoundException;
 
@@ -26,9 +23,6 @@ public class RelatorioService {
     private RelatorioRepository relatorioRepository;
 
     @Autowired
-    private UsuarioService usuarioService;
-
-    @Autowired
     private LoginService loginService;
 
     @Autowired
@@ -37,38 +31,25 @@ public class RelatorioService {
     @Autowired
     private ParticipanteService participanteService;
 
-    public Relatorio findById(Integer relatorioId, Integer grupoId, Integer periodoId){
-        if(!participanteService.isAdmin(grupoId)){
-            return relatorioRepository.findById(relatorioId).orElseThrow(() -> new ObjectNotFoundException("Relatório não encontrado"));
-        }else{
-            throw new AuthorizationException("Você não possui permissão para acessar este relatório.");
-        }
+    public Relatorio findById(Integer relatorioId){
+        return relatorioRepository.findById(relatorioId).orElseThrow(() -> new ObjectNotFoundException("Relatório não encontrado"));
     }
 
-    public Relatorio findByUser(Integer usuarioId, Integer relatorioId){
-        if(loginService.userAuthenticated().getId() != usuarioId)
-            throw new AuthorizationException("Permissão negada para listagem deste relatório");
-
-        Optional<Relatorio> relatorio = relatorioRepository.findById(relatorioId);
-        return relatorio.orElseThrow(() -> new ObjectNotFoundException("Relatório não encontrado"));
+    public List<Relatorio> findAllByUser(Integer usuarioId){     
+        return relatorioRepository.findByUsuarioId(usuarioId);
     }
 
-    // Todo: permitir admin de acessar os relatórios
-    public List<Relatorio> findReportsByUser(Integer usuarioId){
-        if(loginService.userAuthenticated().getId() != usuarioId)
-            throw new AuthorizationException("Permissão negada para listagem de relatórios");
-        
-        Usuario usuario = usuarioService.findById(usuarioId);
-
-        return relatorioRepository.findByUsuario(usuario);
+    public Relatorio findByPeriodFromId(Integer grupoId, Integer periodoId, Integer relatorioId){
+        participanteService.findById(grupoId, loginService.userAuthenticated().getId());
+        return relatorioRepository.findByIdAndPeriodo(relatorioId, periodoService.findById(periodoId, grupoId)).orElseThrow(() -> new ObjectNotFoundException("Relatório não encontrado"));
     }
 
     public List<Relatorio> findAllByPeriod(Integer grupoId, Integer periodoId){
         Participante participante = participanteService.findById(grupoId, loginService.userAuthenticated().getId());
-        if(!participanteService.isAdmin(grupoId)){
+        if(participanteService.isAdmin(participante)){
             return relatorioRepository.findByPeriodo(periodoService.findById(periodoId, grupoId));
         }else{
-            return findReportsByUser(participante.getParticipante().getUsuario().getId());
+            return relatorioRepository.findByUsuarioAndPeriodo(participante.getParticipante().getUsuario(), periodoService.findById(periodoId, grupoId));
         }
     }
 

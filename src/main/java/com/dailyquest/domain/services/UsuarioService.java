@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dailyquest.api.config.security.auth.LoginService;
+import com.dailyquest.domain.models.Relatorio;
 import com.dailyquest.domain.models.Usuario;
 import com.dailyquest.domain.repositories.UsuarioRepository;
 import com.dailyquest.domain.services.exceptions.AuthorizationException;
@@ -43,6 +44,9 @@ public class UsuarioService {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private RelatorioService relatorioService;
 
     public Usuario findById(Integer usuarioId){
         // Verifica se está logado
@@ -131,4 +135,17 @@ public class UsuarioService {
         return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
     }
 
+    public List<Relatorio> findAllReportsByUser(Integer usuarioId){
+        if(loginService.userAuthenticated().getId() != usuarioId)
+            throw new AuthorizationException("Permissão negada para listagem de relatórios");
+
+        return relatorioService.findAllByUser(usuarioId);
+    }
+
+    public Relatorio findReportByIdFromUser(Integer usuarioId, Integer relatorioId){
+        if(loginService.userAuthenticated().getId() != usuarioId)
+            throw new AuthorizationException("Permissão negada para listagem deste relatório");
+
+        return relatorioService.findById(relatorioId);
+    }
 }

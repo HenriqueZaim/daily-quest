@@ -13,6 +13,7 @@ import com.dailyquest.domain.models.Usuario;
 import com.dailyquest.domain.models.enums.TipoPermissao;
 import com.dailyquest.domain.repositories.ParticipanteRepository;
 import com.dailyquest.domain.services.exceptions.AuthorizationException;
+import com.dailyquest.domain.services.exceptions.DataIntegrityException;
 import com.dailyquest.domain.services.exceptions.DomainException;
 import com.dailyquest.domain.services.exceptions.ObjectNotFoundException;
 
@@ -69,20 +70,19 @@ public class ParticipanteService {
 
     public void delete(Integer grupoId, Integer usuarioId){
 
-        if(!isAdmin(grupoId))
+        Participante participante = findById(grupoId, loginService.userAuthenticated().getId());
+        if(!isAdmin(participante) && participante.getParticipante().getUsuario().getId() != usuarioId)
             throw new AuthorizationException("Permissão negada para exclusão de participante");
 
-        Participante participante = findById(grupoId, usuarioId);
-
         try {
-            participanteRepository.deleteByParticipante(participante.getParticipante());
+            participanteRepository.deleteByParticipante(findById(grupoId, usuarioId).getParticipante());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw new DataIntegrityException("Um erro ocorreu ao tentar excluir participante do grupo");
         }  
     }
 
     public void updateAuthority(Participante participante){
-        if(!isAdmin(participante.getParticipante().getGrupo().getId()))
+        if(!isAdmin(participante))
             throw new AuthorizationException("Permissão negada para atualização de autoridade");
 
         participanteRepository.save(participante);
@@ -126,6 +126,10 @@ public class ParticipanteService {
             .collect(Collectors.toList());
 
         return !grupos.isEmpty();
+    }
+
+    public boolean isAdmin(Participante participante){
+        return participante.getAutoridade().equals(TipoPermissao.ADMIN);
     }
 
 }

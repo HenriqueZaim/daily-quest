@@ -11,7 +11,6 @@ import com.dailyquest.api.models.relatorio.RelatorioSimpleDTO;
 import com.dailyquest.api.models.usuario.UsuarioSimpleDTO;
 import com.dailyquest.api.models.usuario.UsuarioDTO;
 import com.dailyquest.domain.models.Usuario;
-import com.dailyquest.domain.services.RelatorioService;
 import com.dailyquest.domain.services.UsuarioService;
 
 import org.modelmapper.ModelMapper;
@@ -37,9 +36,6 @@ public class UsuarioController {
     
     @Autowired
     private UsuarioService usuarioService;
-
-    @Autowired
-    private RelatorioService relatorioService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -84,9 +80,9 @@ public class UsuarioController {
     }
 
     @GetMapping("/{usuarioId}/relatorios")
-    @ApiOperation(value = "Busca por todos os relatórios do usuário selecionado.",notes = "Precisa estar autenticado. Apenas o próprio usuário poderá consultar seus próprios relatórios.",response = RelatorioSimpleDTO.class,nickname = "selected-user-reports")
+    @ApiOperation(value = "Busca por todos os relatórios do usuário selecionado.",notes = "Precisa estar autenticado. Apenas o próprio usuário poderá consultar seus relatórios.",response = RelatorioSimpleDTO.class,nickname = "selected-user-reports")
     public ResponseEntity<List<RelatorioSimpleDTO>> findReportsByUser(@PathVariable Integer usuarioId){
-        List<RelatorioSimpleDTO> relatorios = relatorioService.findReportsByUser(usuarioId)
+        List<RelatorioSimpleDTO> relatorios = usuarioService.findAllReportsByUser(usuarioId)
             .stream()
                 .map(relatorio -> modelMapper.map(relatorio, RelatorioSimpleDTO.class))
                 .collect(Collectors.toList());
@@ -94,9 +90,9 @@ public class UsuarioController {
     }
 
     @GetMapping("/{usuarioId}/relatorios/{relatorioId}")
-    @ApiOperation(value = "Busca pelo relatório completo do usuário selecionado.",notes = "Precisa estar autenticado. Apenas o próprio usuário poderá consultar seu próprio relatório.",response = RelatorioDTO.class,nickname = "selected-user-report")
+    @ApiOperation(value = "Busca pelo relatório completo do usuário selecionado.",notes = "Precisa estar autenticado. Apenas o próprio usuário poderá consultar seu relatório.",response = RelatorioDTO.class,nickname = "selected-user-report")
     public ResponseEntity<RelatorioDTO> findSelectedReportFromUser(@PathVariable Integer usuarioId, @PathVariable Integer relatorioId){
-        RelatorioDTO relatorio = modelMapper.map(relatorioService.findByUser(usuarioId, relatorioId), RelatorioDTO.class);
+        RelatorioDTO relatorio = modelMapper.map(usuarioService.findReportByIdFromUser(usuarioId, relatorioId), RelatorioDTO.class);
         return ResponseEntity.ok().body(relatorio);
     }
 

@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dailyquest.api.config.security.auth.LoginDTO;
 import com.dailyquest.api.config.security.auth.UserDetailsImpl;
+import com.dailyquest.domain.services.exceptions.ObjectNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,14 +37,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+            throws AuthenticationException, ObjectNotFoundException {
+        
         try {
             LoginDTO credenciais = new ObjectMapper().readValue(request.getInputStream(), LoginDTO.class);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credenciais.getEmail(), credenciais.getSenha(), new ArrayList<>());
             Authentication auth = authenticationManager.authenticate(authToken);
             return auth;
-        } catch (IOException e) {
-            throw new RuntimeException();
+        } catch (Exception e) {
+            throw new AuthenticationCredentialsNotFoundException(e.getMessage());
         }
     }
 

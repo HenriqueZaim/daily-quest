@@ -1,6 +1,7 @@
 package com.dailyquest.domain.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -15,11 +16,14 @@ import org.springframework.stereotype.Repository;
 public interface RelatorioRepository extends JpaRepository<Relatorio, Integer>{
     
     @Transactional
-    List<Relatorio> findByUsuario(Usuario usuario);
+    List<Relatorio> findByUsuarioId(Integer usuarioId);
 
     @Transactional
     List<Relatorio> findByPeriodo(Periodo periodo);
 
     @Transactional
-    List<Relatorio> findByPeriodoId(Integer periodoId);
+    Optional<Relatorio> findByIdAndPeriodo(Integer relatorioId, Periodo periodo);
+
+    @Transactional
+    List<Relatorio> findByUsuarioAndPeriodo(Usuario usuario, Periodo periodo);
 }

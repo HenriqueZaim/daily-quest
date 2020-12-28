@@ -14,12 +14,12 @@ import com.dailyquest.api.models.grupo.GrupoSimpleDTO;
 import com.dailyquest.api.models.participante.ParticipanteSimpleDTO;
 import com.dailyquest.api.models.periodo.PeriodoDTO;
 import com.dailyquest.api.models.periodo.PeriodoSimpleDTO;
+import com.dailyquest.api.models.relatorio.RelatorioDTO;
 import com.dailyquest.api.models.relatorio.RelatorioSimpleDTO;
 import com.dailyquest.api.models.usuario.UsuarioSimpleDTO;
 import com.dailyquest.domain.models.Grupo;
 import com.dailyquest.domain.models.Participante;
 import com.dailyquest.domain.models.Periodo;
-import com.dailyquest.domain.models.Relatorio;
 import com.dailyquest.domain.models.Usuario;
 import com.dailyquest.domain.services.GrupoService;
 import com.dailyquest.domain.services.ParticipanteService;
@@ -225,7 +225,8 @@ public class GrupoController {
     /////////////////////////
 
     @GetMapping("/{grupoId}/periodos/{periodoId}/relatorios")
-    public ResponseEntity<List<RelatorioSimpleDTO>> findReports(@PathVariable Integer grupoId, @PathVariable Integer periodoId){
+    @ApiOperation( value = "Busca todos os relatórios do grupo no período informado.", notes = "Precisa estar autenticado. O administrador receberá todos os relatórios do período, e o participante receberá apenas seus relatórios do período informado.", response = RelatorioSimpleDTO.class, nickname = "find-reports-by-period")
+    public ResponseEntity<List<RelatorioSimpleDTO>> findReportsByPeriod(@PathVariable Integer grupoId, @PathVariable Integer periodoId){
         List<RelatorioSimpleDTO> relatorios = relatorioService.findAllByPeriod(grupoId, periodoId)
             .stream()
                 .map(relatorio -> modelMapper.map(relatorio, RelatorioSimpleDTO.class))
@@ -234,25 +235,21 @@ public class GrupoController {
         return ResponseEntity.ok().body(relatorios);
     }
 
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping("/{grupoId}/periodos/{periodoId}/relatorios")
-    public RelatorioSimpleDTO saveReport(@RequestBody RelatorioSimpleDTO relatorioSimpleDTO, @PathVariable Integer grupoId, @PathVariable Integer periodoId){   
-        Relatorio relatorio = modelMapper.map(relatorioSimpleDTO, Relatorio.class);
-        relatorio = relatorioService.save(relatorio, grupoId, periodoId);
-
-        return modelMapper.map(relatorio, RelatorioSimpleDTO.class);
+    @GetMapping("/{grupoId}/periodos/{periodoId}/relatorios/{relatorioId}")
+    @ApiOperation( value = "Busca o relatório específico do grupo no período informado.", notes = "Precisa estar autenticado. Tanto o administrador do grupo quanto o participante - dono do relatório - poderá receber este relatório.", response = RelatorioDTO.class, nickname = "find-report-by-period-from-id")
+    public ResponseEntity<RelatorioDTO> findReportByPeriodFromId(@PathVariable Integer grupoId, @PathVariable Integer periodoId, @PathVariable Integer relatorioId){
+        RelatorioDTO relatorioDTO = modelMapper.map(relatorioService.findByPeriodFromId(grupoId, periodoId, relatorioId), RelatorioDTO.class);
+        return ResponseEntity.ok().body(relatorioDTO);
     }
 
+    // @ResponseStatus(value = HttpStatus.CREATED)
+    // @PostMapping("/{grupoId}/periodos/{periodoId}/relatorios")
+    // public RelatorioSimpleDTO saveReport(@RequestBody RelatorioSimpleDTO relatorioSimpleDTO, @PathVariable Integer grupoId, @PathVariable Integer periodoId){   
+    //     Relatorio relatorio = modelMapper.map(relatorioSimpleDTO, Relatorio.class);
+    //     relatorio = relatorioService.save(relatorio, grupoId, periodoId);
 
-    // @GetMapping("/{grupoId}/periodos/{periodoId}/relatorios/{relatorioId}")
-    // public ResponseEntity<RelatorioDTO> findReport(@PathVariable Integer grupoId, @PathVariable Integer periodoId, @PathVariable Integer relatorioId){
-        
-        
+    //     return modelMapper.map(relatorio, RelatorioSimpleDTO.class);
     // }
-    // Todo: /grupos/{grupoId}/periodos/{periodoId}/relatorios/{relatorioId}
-        // * GET
-        // ! Admin tem permissão para acessar os detalhes do relatório
-        // ! Participante que enviou este relatório também tem acesso, e poderá atualizá-lo
 
     // Todo: /grupos/{grupoId}/periodos/{periodoId}/relatorios/{relatorioId}
         // * PUT

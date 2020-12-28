@@ -18,7 +18,7 @@ import lombok.Setter;
 public class ErrorResponse {
     
     private Integer status;
-    private OffsetDateTime moment;
+    private OffsetDateTime timestamp;
     private String message;
     private List<FieldError> errors;
 

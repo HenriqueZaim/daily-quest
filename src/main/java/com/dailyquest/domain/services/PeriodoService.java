@@ -37,12 +37,11 @@ public class PeriodoService {
 
     public Periodo findById(Integer periodoId, Integer grupoId){
         
-        if(!participanteService.isAdmin(grupoId))
-            throw new AuthorizationException("Permissão negada para atualização de periodo");
+        participanteService.findById(grupoId, loginService.userAuthenticated().getId());
 
         Optional<Periodo> periodo = periodoRepository.findByIdAndGrupoId(periodoId, grupoId);
         
-        return periodo.orElseThrow(() -> new ObjectNotFoundException("Periodo não encontrado"));
+        return periodo.orElseThrow(() -> new ObjectNotFoundException("Período não encontrado"));
     }
 
     public List<Periodo> findByGroup(Integer grupoId){
@@ -71,7 +70,7 @@ public class PeriodoService {
 
     public void update(Periodo periodo, Integer periodoId, Integer grupoId){
         if(!participanteService.isAdmin(grupoId))
-            throw new AuthorizationException("Permissão negada para atualização de periodo");
+            throw new AuthorizationException("Permissão negada para atualização de período");
 
         Periodo periodoExistente = findById(periodoId, grupoId);
 
@@ -85,7 +84,7 @@ public class PeriodoService {
 
     public void patch(Periodo periodo){
         if(!participanteService.isAdmin(periodo.getGrupo().getId()))
-            throw new AuthorizationException("Permissão negada para atualização de periodo");
+            throw new AuthorizationException("Permissão negada para atualização de período");
 
         periodo.setDataHoraAtualizacao(OffsetDateTime.now());
         periodoRepository.save(periodo); 

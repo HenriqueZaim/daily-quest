@@ -36,7 +36,7 @@ public class DBService {
 
     public void instantiateTestDatabase() throws ParseException {
 
-        Usuario user1 = new Usuario(null, "henriquezsanches@gmail.com", "$2a$10$IEQa4Gb7e2Hm.vPLO15SrupIE3LQSY/n7V1kXH2nNQgyCnHPY8RdG",  Stream.of(TipoUsuario.ROLE_USUARIO).collect(Collectors.toSet()), Collections.emptySet(), Collections.emptyList());
+        Usuario user1 = new Usuario(null, "user1@mail.com", "$2a$10$IEQa4Gb7e2Hm.vPLO15SrupIE3LQSY/n7V1kXH2nNQgyCnHPY8RdG",  Stream.of(TipoUsuario.ROLE_USUARIO).collect(Collectors.toSet()), Collections.emptySet(), Collections.emptyList());
         Usuario user2 = new Usuario(null, "user2@mail.com", "$2a$10$IEQa4Gb7e2Hm.vPLO15SrupIE3LQSY/n7V1kXH2nNQgyCnHPY8RdG",  Stream.of(TipoUsuario.ROLE_ADMIN).collect(Collectors.toSet()), Collections.emptySet(), Collections.emptyList());
         Usuario user3 = new Usuario(null, "user3@mail.com", "$2a$10$IEQa4Gb7e2Hm.vPLO15SrupIE3LQSY/n7V1kXH2nNQgyCnHPY8RdG",  Stream.of(TipoUsuario.ROLE_USUARIO).collect(Collectors.toSet()), Collections.emptySet(), Collections.emptyList());
         Usuario user4 = new Usuario(null, "user4@mail.com", "$2a$10$IEQa4Gb7e2Hm.vPLO15SrupIE3LQSY/n7V1kXH2nNQgyCnHPY8RdG",  Stream.of(TipoUsuario.ROLE_USUARIO).collect(Collectors.toSet()), Collections.emptySet(), Collections.emptyList());
@@ -62,7 +62,6 @@ public class DBService {
 
         Grupo grup1 = new Grupo();
         grup1.setNome("grupo1");
-        grup1.setImagemUrl("imagem1");
         grup1.setDescricao("desc grupo 1");
         grup1.setDataHoraCriacao(OffsetDateTime.now());
         grup1.setParticipantes(Stream.of(
@@ -73,7 +72,6 @@ public class DBService {
 
         Grupo grup2 = new Grupo();
         grup2.setNome("grupo2");
-        grup2.setImagemUrl("imagem2");
         grup2.setDescricao("desc grupo 2");
         grup2.setDataHoraCriacao(OffsetDateTime.now());
         grup2.setParticipantes(Stream.of(
@@ -85,7 +83,6 @@ public class DBService {
 
         Grupo grup3 = new Grupo();
         grup3.setNome("grupo3");
-        grup3.setImagemUrl("imagem3");
         grup3.setDescricao("desc grupo 3");
         grup3.setDataHoraCriacao(OffsetDateTime.now());
         grup3.setParticipantes(Stream.of(

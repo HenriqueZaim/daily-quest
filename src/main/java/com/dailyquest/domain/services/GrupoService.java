@@ -45,7 +45,7 @@ public class GrupoService {
         );
         
         if(!participante.isPresent())
-            throw new AuthorizationException("Usuário não está registrado no grupo");
+            throw new AuthorizationException("Permissão negada para usuário não registrado no grupo");
         
         return grupo.get();
     }
@@ -58,11 +58,11 @@ public class GrupoService {
 
     public void update(Grupo grupo, Integer grupoId){
        
-        if(!participanteService.isAdmin(grupoId))
+        if(!participanteService.isAdmin(participanteService.findById(grupoId, loginService.userAuthenticated().getId())))
             throw new AuthorizationException("Permissão negada para atualização de grupo");
 
         if(grupo.getId() != grupoId)
-            throw new DomainException("Operação não é suportada");
+            throw new DomainException("Operação não suportada");
         
         Grupo grupoExistente = findById(grupoId);
         grupo.setParticipantes(grupoExistente.getParticipantes());

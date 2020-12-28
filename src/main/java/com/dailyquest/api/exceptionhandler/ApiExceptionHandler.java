@@ -39,7 +39,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<Object> authorizationExceptionHandler(AuthorizationException ex, WebRequest request){
         errorResponse.setStatus(HttpStatus.FORBIDDEN.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
@@ -48,7 +48,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<Object> FileExceptionHandler(FileException ex, WebRequest request){
         errorResponse.setStatus( HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -59,7 +59,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 
         errorResponse.setStatus(code.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), code, request);
     }
@@ -68,7 +68,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<Object> AmazonClientExceptionHandler(AmazonClientException ex, WebRequest request){
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -77,7 +77,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<Object> AmazonS3ExceptionHandler(AmazonS3Exception ex, WebRequest request){
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -86,7 +86,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<Object> domainExceptionHandler(DomainException ex, WebRequest request){
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -95,7 +95,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<Object> dataIntegrityExceptionHandler(DataIntegrityException ex, WebRequest request){
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -104,7 +104,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity<Object> ObjectNotFoundExceptionHandler(ObjectNotFoundException ex, WebRequest request){
         errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
 
         return super.handleExceptionInternal(ex, errorResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
@@ -124,7 +124,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
         errorResponse.setErrors(fieldErrors);
         errorResponse.setStatus(status.value());
         errorResponse.setMessage("Um ou mais campos estão inválidos");
-        errorResponse.setMoment(OffsetDateTime.now());
+        errorResponse.setTimestamp(OffsetDateTime.now());
         
         return super.handleExceptionInternal(ex, errorResponse, headers, status, request);
     }
