@@ -26,4 +26,7 @@ public interface RelatorioRepository extends JpaRepository<Relatorio, Integer>{
 
     @Transactional
     List<Relatorio> findByUsuarioAndPeriodo(Usuario usuario, Periodo periodo);
+
+    @Transactional
+    Optional<Relatorio> findByIdAndUsuario(Integer relatorioId, Usuario usuario);
 }

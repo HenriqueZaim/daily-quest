@@ -1,8 +1,9 @@
 package com.dailyquest.domain.services;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.dailyquest.api.config.security.auth.LoginService;
 import com.dailyquest.domain.models.Participante;
@@ -10,6 +11,7 @@ import com.dailyquest.domain.models.Periodo;
 import com.dailyquest.domain.models.Relatorio;
 import com.dailyquest.domain.models.enums.StatusPeriodo;
 import com.dailyquest.domain.repositories.RelatorioRepository;
+import com.dailyquest.domain.services.exceptions.AuthorizationException;
 import com.dailyquest.domain.services.exceptions.DomainException;
 import com.dailyquest.domain.services.exceptions.ObjectNotFoundException;
 
@@ -52,28 +54,47 @@ public class RelatorioService {
             return relatorioRepository.findByUsuarioAndPeriodo(participante.getParticipante().getUsuario(), periodoService.findById(periodoId, grupoId));
         }
     }
+    public boolean isSameDay(OffsetDateTime date){
+        Instant lastSubmitDate = date.toInstant().truncatedTo(ChronoUnit.DAYS);
+        Instant newSubmitDate = OffsetDateTime.now().toInstant().truncatedTo(ChronoUnit.DAYS);
+        return lastSubmitDate.equals(newSubmitDate);
+    }
 
     public Relatorio save(Relatorio relatorio, Integer grupoId, Integer periodoId){
-        // Verifica se o período existe, se o usuário possui permissão e se o período está ativo
-        // Todo: Não está bloqueando admin de subir relatório
+        Participante participante = participanteService.findById(grupoId, loginService.userAuthenticated().getId());
         Periodo periodo = periodoService.findById(periodoId, grupoId);
-        if(periodo.getStatusPeriodo() == StatusPeriodo.INATIVO)
-            throw new DomainException("Relatório não está ativo para receber novos relatórios.");
+        if(periodo.getStatusPeriodo().equals(StatusPeriodo.INATIVO))
+            throw new DomainException("Período não está ativo para receber novos relatórios.");
+            
+        if(!participanteService.isAdmin(participante)){
+            List<Relatorio> relatorios =  relatorioRepository.findByUsuarioAndPeriodo(participante.getParticipante().getUsuario(), periodo);
+            if(relatorios.stream().anyMatch(x -> isSameDay(x.getDataHoraEntrega())))
+                throw new DomainException("Você já enviou um formulário hoje!");
+        }      
         
-        // Verifica se o usuário logado entregou algum relatório no mesmo dia
-        // Todo: Melhorar verificação de data
-        List<Relatorio> relatorios = findAllByPeriod(grupoId, periodoId);
-        relatorios = relatorios.stream()
-            .filter(r -> r.getDataHoraEntrega().getDayOfMonth() == OffsetDateTime.now().getDayOfMonth())
-            .collect(Collectors.toList());
-
-        if(!relatorios.isEmpty())
-            throw new DomainException("Apenas um relatório pode ser entregue a cada dia do período.");
-
         relatorio.setPeriodo(periodo);
         relatorio.setUsuario(loginService.userAuthenticated());
         relatorio.setDataHoraCriacao(OffsetDateTime.now());
+        relatorio.setDataHoraEntrega(OffsetDateTime.now());
 
         return relatorioRepository.save(relatorio);
+    }
+
+    public void update(Relatorio relatorio, Integer grupoId, Integer periodoId, Integer relatorioId){
+
+        Participante participante = participanteService.findById(grupoId, loginService.userAuthenticated().getId());
+        
+        relatorioRepository.findByIdAndUsuario(relatorioId, participante.getParticipante().getUsuario())
+            .orElseThrow(() -> new AuthorizationException("Ops! Você não pode atualizar um relatório que não seja seu!")); 
+        
+        Periodo periodo = periodoService.findById(periodoId, grupoId);
+        if(periodo.getStatusPeriodo().equals(StatusPeriodo.INATIVO))
+            throw new DomainException("Período não está ativo para atualização de relatórios.");
+              
+        relatorio.setId(relatorioId);
+        relatorio.setDataHoraAtualizacao(OffsetDateTime.now());
+        relatorio.setDataHoraEntrega(OffsetDateTime.now());
+
+        relatorioRepository.save(relatorio);
     }
 }

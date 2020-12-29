@@ -20,6 +20,7 @@ import com.dailyquest.api.models.usuario.UsuarioSimpleDTO;
 import com.dailyquest.domain.models.Grupo;
 import com.dailyquest.domain.models.Participante;
 import com.dailyquest.domain.models.Periodo;
+import com.dailyquest.domain.models.Relatorio;
 import com.dailyquest.domain.models.Usuario;
 import com.dailyquest.domain.services.GrupoService;
 import com.dailyquest.domain.services.ParticipanteService;
@@ -242,16 +243,21 @@ public class GrupoController {
         return ResponseEntity.ok().body(relatorioDTO);
     }
 
-    // @ResponseStatus(value = HttpStatus.CREATED)
-    // @PostMapping("/{grupoId}/periodos/{periodoId}/relatorios")
-    // public RelatorioSimpleDTO saveReport(@RequestBody RelatorioSimpleDTO relatorioSimpleDTO, @PathVariable Integer grupoId, @PathVariable Integer periodoId){   
-    //     Relatorio relatorio = modelMapper.map(relatorioSimpleDTO, Relatorio.class);
-    //     relatorio = relatorioService.save(relatorio, grupoId, periodoId);
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @PostMapping("/{grupoId}/periodos/{periodoId}/relatorios")
+    @ApiOperation( value = "Cria um novo relatório para o usuário autenticado.", notes = "Precisa estar autenticado. Tanto o administrador do grupo quanto o participante poderá subir um relatório, tendo o participante limite de 1 por dia.", response = RelatorioSimpleDTO.class, nickname = "add-report")
+    public RelatorioSimpleDTO saveReport(@RequestBody RelatorioSimpleDTO relatorioSimpleDTO, @PathVariable Integer grupoId, @PathVariable Integer periodoId){   
+        Relatorio relatorio = modelMapper.map(relatorioSimpleDTO, Relatorio.class);
+        relatorio = relatorioService.save(relatorio, grupoId, periodoId);
+        return modelMapper.map(relatorio, RelatorioSimpleDTO.class);
+    }
 
-    //     return modelMapper.map(relatorio, RelatorioSimpleDTO.class);
-    // }
+    @PutMapping("/{grupoId}/periodos/{periodoId}/relatorios/{relatorioId}")
+    @ApiOperation( value = "Atualização dos dados do relatório no período informado.", notes = "Precisa estar autenticado. Apenas o próprio dono do relatório poderá atualizá-lo.", response = Void.class, nickname = "update-report")
+    public ResponseEntity<Void> updateReport(@Valid @RequestBody RelatorioSimpleDTO relatorioSimpleDTO,
+            @PathVariable Integer grupoId, @PathVariable Integer periodoId, @PathVariable Integer relatorioId) {
+        relatorioService.update(modelMapper.map(relatorioSimpleDTO, Relatorio.class), periodoId, grupoId, relatorioId);
+        return ResponseEntity.noContent().build();
+    } 
 
-    // Todo: /grupos/{grupoId}/periodos/{periodoId}/relatorios/{relatorioId}
-        // * PUT
-        // ! Admin não tem permissão para atualizar
 }
