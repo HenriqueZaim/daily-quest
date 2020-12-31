@@ -1,7 +1,5 @@
 package com.dailyquest.domain.models;
 
-import java.time.OffsetDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -21,7 +19,6 @@ public class Relatorio extends EntidadeDominio{
 
     private String descricao;
     private String assunto;
-    private OffsetDateTime dataHoraEntrega;
 
     @ManyToOne
     private Periodo periodo;

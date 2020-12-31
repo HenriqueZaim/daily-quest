@@ -100,41 +100,41 @@ public class DBService {
         Periodo periodo31 = new Periodo(StatusPeriodo.INATIVO, TipoPeriodo.MENSAL, OffsetDateTime.now(), OffsetDateTime.now(), Collections.emptyList(), grup3);
         Periodo periodo32 = new Periodo(StatusPeriodo.ATIVO, TipoPeriodo.MENSAL, OffsetDateTime.now(), OffsetDateTime.now(), Collections.emptyList(), grup3);
 
-        Relatorio relatorio11 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo11, user1);
-        Relatorio relatorio12 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo11, user1);
-        Relatorio relatorio13 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo12, user1);
+        Relatorio relatorio11 = new Relatorio("relatorio", "Assunto", periodo11, user1);
+        Relatorio relatorio12 = new Relatorio("relatorio", "Assunto", periodo11, user1);
+        Relatorio relatorio13 = new Relatorio("relatorio", "Assunto", periodo12, user1);
 
-        Relatorio relatorio21 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo11, user2);
-        Relatorio relatorio22 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo11, user2);
-        Relatorio relatorio23 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo12, user2);
+        Relatorio relatorio21 = new Relatorio("relatorio", "Assunto", periodo11, user2);
+        Relatorio relatorio22 = new Relatorio("relatorio", "Assunto", periodo11, user2);
+        Relatorio relatorio23 = new Relatorio("relatorio", "Assunto", periodo12, user2);
 
-        Relatorio relatorio31 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo11, user3);
-        Relatorio relatorio32 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo11, user3);
-        Relatorio relatorio33 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo12, user3);
+        Relatorio relatorio31 = new Relatorio("relatorio", "Assunto", periodo11, user3);
+        Relatorio relatorio32 = new Relatorio("relatorio", "Assunto", periodo11, user3);
+        Relatorio relatorio33 = new Relatorio("relatorio", "Assunto", periodo12, user3);
 
-        Relatorio relatorio41 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo21, user4);
-        Relatorio relatorio42 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo21, user4);
-        Relatorio relatorio43 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo22, user4);
+        Relatorio relatorio41 = new Relatorio("relatorio", "Assunto", periodo21, user4);
+        Relatorio relatorio42 = new Relatorio("relatorio", "Assunto", periodo21, user4);
+        Relatorio relatorio43 = new Relatorio("relatorio", "Assunto", periodo22, user4);
 
-        Relatorio relatorio51 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo21, user5);
-        Relatorio relatorio52 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo21, user5);
-        Relatorio relatorio53 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo22, user5);
+        Relatorio relatorio51 = new Relatorio("relatorio", "Assunto", periodo21, user5);
+        Relatorio relatorio52 = new Relatorio("relatorio", "Assunto", periodo21, user5);
+        Relatorio relatorio53 = new Relatorio("relatorio", "Assunto", periodo22, user5);
 
-        Relatorio relatorio61 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo21, user6);
-        Relatorio relatorio62 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo21, user6);
-        Relatorio relatorio63 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo22, user6);
+        Relatorio relatorio61 = new Relatorio("relatorio", "Assunto", periodo21, user6);
+        Relatorio relatorio62 = new Relatorio("relatorio", "Assunto", periodo21, user6);
+        Relatorio relatorio63 = new Relatorio("relatorio", "Assunto", periodo22, user6);
 
-        Relatorio relatorio71 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo31, user7);
-        Relatorio relatorio72 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo31, user7);
-        Relatorio relatorio73 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo32, user7);
+        Relatorio relatorio71 = new Relatorio("relatorio", "Assunto", periodo31, user7);
+        Relatorio relatorio72 = new Relatorio("relatorio", "Assunto", periodo31, user7);
+        Relatorio relatorio73 = new Relatorio("relatorio", "Assunto", periodo32, user7);
 
-        Relatorio relatorio81 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo31, user8);
-        Relatorio relatorio82 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo31, user8);
-        Relatorio relatorio83 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo32, user8);
+        Relatorio relatorio81 = new Relatorio("relatorio", "Assunto", periodo31, user8);
+        Relatorio relatorio82 = new Relatorio("relatorio", "Assunto", periodo31, user8);
+        Relatorio relatorio83 = new Relatorio("relatorio", "Assunto", periodo32, user8);
 
-        Relatorio relatorio91 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo31, user9);
-        Relatorio relatorio92 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo31, user9);
-        Relatorio relatorio93 = new Relatorio("relatorio", "Assunto", OffsetDateTime.now(), periodo32, user9);
+        Relatorio relatorio91 = new Relatorio("relatorio", "Assunto", periodo31, user9);
+        Relatorio relatorio92 = new Relatorio("relatorio", "Assunto", periodo31, user9);
+        Relatorio relatorio93 = new Relatorio("relatorio", "Assunto", periodo32, user9);
 
         periodo11.setRelatorios(
             Stream.of(

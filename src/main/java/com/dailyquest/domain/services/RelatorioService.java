@@ -68,14 +68,13 @@ public class RelatorioService {
             
         if(!participanteService.isAdmin(participante)){
             List<Relatorio> relatorios =  relatorioRepository.findByUsuarioAndPeriodo(participante.getParticipante().getUsuario(), periodo);
-            if(relatorios.stream().anyMatch(x -> isSameDay(x.getDataHoraEntrega())))
+            if(relatorios.stream().anyMatch(x -> isSameDay(x.getDataHoraCriacao())))
                 throw new DomainException("Você já enviou um formulário hoje!");
         }      
         
         relatorio.setPeriodo(periodo);
         relatorio.setUsuario(loginService.userAuthenticated());
         relatorio.setDataHoraCriacao(OffsetDateTime.now());
-        relatorio.setDataHoraEntrega(OffsetDateTime.now());
 
         return relatorioRepository.save(relatorio);
     }
@@ -93,7 +92,6 @@ public class RelatorioService {
               
         relatorio.setId(relatorioId);
         relatorio.setDataHoraAtualizacao(OffsetDateTime.now());
-        relatorio.setDataHoraEntrega(OffsetDateTime.now());
 
         relatorioRepository.save(relatorio);
     }
