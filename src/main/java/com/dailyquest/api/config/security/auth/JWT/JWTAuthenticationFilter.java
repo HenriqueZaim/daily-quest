@@ -42,8 +42,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             LoginDTO credenciais = new ObjectMapper().readValue(request.getInputStream(), LoginDTO.class);
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(credenciais.getEmail(), credenciais.getSenha(), new ArrayList<>());
-            Authentication auth = authenticationManager.authenticate(authToken);
-            return auth;
+            return authenticationManager.authenticate(authToken);
         } catch (Exception e) {
             throw new AuthenticationCredentialsNotFoundException(e.getMessage());
         }
@@ -54,8 +53,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             Authentication authResult) throws IOException, ServletException {
                 String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
                 String token = jwtUtils.generateToken(username);
+               
                 response.addHeader("Authorization", "Bearer " + token);
                 response.addHeader("access-control-expose-headers", "Authorization");
+
     }
 
     private class JWTAuthenticationFailureHandler implements AuthenticationFailureHandler {
@@ -63,6 +64,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         @Override
         public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
                 throws IOException, ServletException {
+            
             response.setStatus(401);
             response.setContentType("application/json"); 
             response.getWriter().append(json());

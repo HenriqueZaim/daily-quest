@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface RelatorioRepository extends JpaRepository<Relatorio, Integer>{
     
     @Transactional
-    List<Relatorio> findByUsuarioId(Integer usuarioId);
+    List<Relatorio> findByUsuario(Usuario usuario);
 
     @Transactional
     List<Relatorio> findByPeriodo(Periodo periodo);

@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import com.dailyquest.api.config.security.auth.LoginService;
-import com.dailyquest.domain.models.Relatorio;
 import com.dailyquest.domain.models.Usuario;
 import com.dailyquest.domain.repositories.UsuarioRepository;
 import com.dailyquest.domain.services.exceptions.AuthorizationException;
 import com.dailyquest.domain.services.exceptions.DataIntegrityException;
 import com.dailyquest.domain.services.exceptions.DomainException;
-import com.dailyquest.domain.services.exceptions.ObjectNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,31 +43,25 @@ public class UsuarioService {
     @Autowired
     private ImageService imageService;
 
-    @Autowired
-    private RelatorioService relatorioService;
+    public Usuario authenticatedUser(){
+        return loginService.userAuthenticated();
+    }
 
     public Usuario findById(Integer usuarioId){
-        // Verifica se está logado
         loginService.authenticated();
         
-        // Busca usuário pelo ID informado 
         Optional<Usuario> usuario = usuarioRepository.findById(usuarioId);
-        return usuario.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+        return usuario.orElseThrow(() -> new DomainException("Usuário não encontrado"));
     }
 
     public Usuario findByEmail(String email){
-        // Busca usuário pelo EMAIL informado 
         Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
-        return usuario.orElseThrow(() -> new ObjectNotFoundException("Usuário não encontrado"));
+        return usuario.orElseThrow(() -> new DomainException("Usuário não encontrado"));
     }
 
-    public void deleteById(Integer usuarioId){
-        if(!loginService.isLoggedUser(usuarioId))
-            throw new AuthorizationException("Você não tem permissão para acessar este método.");
-
-        findById(usuarioId);
+    public void deleteUser(){
         try {
-            usuarioRepository.deleteById(usuarioId);
+            usuarioRepository.deleteById(loginService.userAuthenticated().getId());
         } catch (Exception e) {
             throw new DataIntegrityException("Não foi continuar com a operação de exclusão");
         }  
@@ -89,15 +81,14 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public void update(Usuario usuario, Integer usuarioId){
-        if(!loginService.isLoggedUser(usuarioId))
+    public void update(Usuario usuario){
+        if(!loginService.isLoggedUser(usuario.getId()))
             throw new AuthorizationException("Você não tem permissão para acessar este método.");
 
-        Usuario usuarioExistente = findById(usuarioId);
+        Usuario usuarioExistente = findById(usuario.getId());
         if(usuarioExistente.getEmail() != usuario.getEmail())
             checkEmailExistence(usuario.getEmail());
         
-        usuario.setId(usuarioId);
         usuario.setDataHoraAtualizacao(OffsetDateTime.now());
         usuario.setDataHoraCriacao(usuarioExistente.getDataHoraCriacao());
         usuarioRepository.save(usuario);
@@ -120,11 +111,9 @@ public class UsuarioService {
             throw new DomainException("O e-mail inserido já está registrado no sistema");
     }
 
-    public URI uploadProfilePicture(MultipartFile multipartFile, Integer usuarioId){
-        if(!loginService.isLoggedUser(usuarioId))
-            throw new AuthorizationException("Você não tem permissão para acessar este método.");
-
-        Usuario user = findById(usuarioId);
+    public URI uploadProfilePicture(MultipartFile multipartFile){
+        
+        Usuario user = loginService.userAuthenticated();
 
         BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
         jpgImage = imageService.cropSquare(jpgImage);
@@ -135,17 +124,5 @@ public class UsuarioService {
         return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");
     }
 
-    public List<Relatorio> findAllReportsByUser(Integer usuarioId){
-        if(loginService.userAuthenticated().getId() != usuarioId)
-            throw new AuthorizationException("Permissão negada para listagem de relatórios");
 
-        return relatorioService.findAllByUser(usuarioId);
-    }
-
-    public Relatorio findReportByIdFromUser(Integer usuarioId, Integer relatorioId){
-        if(loginService.userAuthenticated().getId() != usuarioId)
-            throw new AuthorizationException("Permissão negada para listagem deste relatório");
-
-        return relatorioService.findById(relatorioId);
-    }
 }

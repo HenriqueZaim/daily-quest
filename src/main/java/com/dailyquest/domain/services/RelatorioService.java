@@ -9,6 +9,7 @@ import com.dailyquest.api.config.security.auth.LoginService;
 import com.dailyquest.domain.models.Participante;
 import com.dailyquest.domain.models.Periodo;
 import com.dailyquest.domain.models.Relatorio;
+import com.dailyquest.domain.models.Usuario;
 import com.dailyquest.domain.models.enums.StatusPeriodo;
 import com.dailyquest.domain.repositories.RelatorioRepository;
 import com.dailyquest.domain.services.exceptions.AuthorizationException;
@@ -37,8 +38,8 @@ public class RelatorioService {
         return relatorioRepository.findById(relatorioId).orElseThrow(() -> new ObjectNotFoundException("Relatório não encontrado"));
     }
 
-    public List<Relatorio> findAllByUser(Integer usuarioId){     
-        return relatorioRepository.findByUsuarioId(usuarioId);
+    public List<Relatorio> findAllByUser(Usuario usuario){     
+        return relatorioRepository.findByUsuario(usuario);
     }
 
     public Relatorio findByPeriodFromId(Integer grupoId, Integer periodoId, Integer relatorioId){
@@ -82,9 +83,7 @@ public class RelatorioService {
     public void update(Relatorio relatorio, Integer grupoId, Integer periodoId, Integer relatorioId){
 
         Participante participante = participanteService.findById(grupoId, loginService.userAuthenticated().getId());
-        
-        relatorioRepository.findByIdAndUsuario(relatorioId, participante.getParticipante().getUsuario())
-            .orElseThrow(() -> new AuthorizationException("Ops! Você não pode atualizar um relatório que não seja seu!")); 
+        findByIdAndUsuario(relatorioId, participante.getParticipante().getUsuario());
         
         Periodo periodo = periodoService.findById(periodoId, grupoId);
         if(periodo.getStatusPeriodo().equals(StatusPeriodo.INATIVO))
@@ -95,4 +94,10 @@ public class RelatorioService {
 
         relatorioRepository.save(relatorio);
     }
+
+    public Relatorio findByIdAndUsuario(Integer relatorioId, Usuario usuario){
+        return relatorioRepository.findByIdAndUsuario(relatorioId, usuario)
+            .orElseThrow(() -> new AuthorizationException("Ops! Você não pode acessar um relatório que não seja seu!"));
+    }
+
 }
