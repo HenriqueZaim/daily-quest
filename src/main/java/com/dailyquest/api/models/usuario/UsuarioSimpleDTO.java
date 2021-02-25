@@ -25,9 +25,6 @@ public class UsuarioSimpleDTO {
     @NotBlank
     private String email;
 
-    @NotBlank
-    private String imagemUrl;
-
     @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataHoraCriacao;
 

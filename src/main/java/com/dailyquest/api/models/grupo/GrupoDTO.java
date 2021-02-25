@@ -29,9 +29,6 @@ public class GrupoDTO {
     @NotBlank
     private String descricao;
 
-    @NotBlank
-    private String imagemUrl;
-
     @NotEmpty
     private Set<ParticipanteSimpleDTO> participantes;
 

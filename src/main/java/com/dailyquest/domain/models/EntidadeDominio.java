@@ -8,9 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +27,7 @@ public abstract class EntidadeDominio implements Serializable {
     private Integer id;
     private String nome;
     
-    @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataHoraCriacao;
-    
-    @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataHoraAtualizacao;
 
 }

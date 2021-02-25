@@ -22,9 +22,6 @@ public class GrupoSimpleDTO {
     @NotBlank
     private String descricao;
 
-    @NotBlank
-    private String imagemUrl;
-
     @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataHoraCriacao;
 

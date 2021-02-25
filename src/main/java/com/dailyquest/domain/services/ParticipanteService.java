@@ -1,9 +1,7 @@
 package com.dailyquest.domain.services;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.dailyquest.api.config.security.auth.LoginService;
 import com.dailyquest.domain.models.Grupo;
@@ -40,12 +38,7 @@ public class ParticipanteService {
 
     public Participante findById(Integer grupoId, Integer usuarioId){
 
-        Optional<Participante> participante = participanteRepository.findByParticipante(
-            new ParticipantePK(
-                grupoService.findById(grupoId),
-                usuarioService.findById(usuarioId)
-            )
-        );
+        Optional<Participante> participante = participanteRepository.findByParticipanteUsuarioIdAndParticipanteGrupoId(usuarioId, grupoId);
 
         return participante.orElseThrow(
             () -> new ObjectNotFoundException("Participante não encontrado")
@@ -118,14 +111,11 @@ public class ParticipanteService {
     }
 
     public boolean isAdmin(Integer grupoId){
-        Usuario usuario = loginService.userAuthenticated();
-
-        List<Participante> grupos = usuario.getGrupos().stream()
-            .filter(p -> p.getParticipante().getGrupo().getId().equals(grupoId))
-            .filter(p -> p.getAutoridade().equals(TipoPermissao.ADMIN))
-            .collect(Collectors.toList());
-
-        return !grupos.isEmpty();
+        try {
+            return findById(grupoId, loginService.authenticated().getId()).getAutoridade().equals(TipoPermissao.ADMIN);
+        } catch (ObjectNotFoundException e){
+            throw new AuthorizationException("Você não possui permissão para acessar esta funcionalidade");
+        }
     }
 
     public boolean isAdmin(Participante participante){

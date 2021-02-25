@@ -19,4 +19,7 @@ public interface ParticipanteRepository extends JpaRepository<Participante, Part
 
     @Transactional
     void deleteByParticipante(ParticipantePK participantePK);
+
+    @Transactional
+    Optional<Participante> findByParticipanteUsuarioIdAndParticipanteGrupoId(Integer usuarioId, Integer grupoId);
 }

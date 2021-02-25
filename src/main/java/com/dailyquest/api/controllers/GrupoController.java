@@ -80,8 +80,7 @@ public class GrupoController {
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiOperation( value = "Cria novo grupo sendo o usuário autenticado seu administrador", notes = "Precisa estar autenticado.", response = GrupoDTO.class, nickname = "new-group")
     public GrupoDTO save(@Valid @RequestBody GrupoDTO grupoDTO) {
-        Grupo grupo = modelMapper.map(grupoDTO, Grupo.class);
-        return modelMapper.map(grupoService.save(grupo), GrupoDTO.class);
+        return modelMapper.map(grupoService.save(modelMapper.map(grupoDTO, Grupo.class)), GrupoDTO.class);
     }
 
     /////////////////////////

@@ -24,7 +24,7 @@ public class AuthService {
     public void sendNewPassword(String email){
         Usuario usuario = usuarioService.findByEmail(email);
         if(usuario == null)
-            throw new ObjectNotFoundException("Email n encontrado");
+            throw new ObjectNotFoundException("Email não encontrado");
     
         String newPass = newPassword();
         usuario.setSenha(b.encode(newPass));

@@ -1,6 +1,7 @@
 package com.dailyquest.api.config.security.auth.JWT;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -35,9 +36,21 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                     if(auth != null){
                         SecurityContextHolder.getContext().setAuthentication(auth);
                         System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+                    }else{
+                        response.setStatus(401);
+                        response.setContentType("application/json"); 
+                        response.getWriter().append(json());
                     }
                 }
                 chain.doFilter(request, response);
+    }
+
+    private String json() {
+        long date = new Date().getTime();
+        return "{\"timestamp\": " + date + ", "
+            + "\"status\": 401, "
+            + "\"error\": \"Não autorizado\", "
+            + "\"message\": \"Faça login para continuar\"}";
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token){
